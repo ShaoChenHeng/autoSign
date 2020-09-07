@@ -2,7 +2,7 @@
 
 ZAFU每日一报自动签;
 
-在使用前请配置好 chrome　与 chromedriver;
+在使用前请配置好 chrome　与 chromedriver，可以参考这个网页https://www.cnblogs.com/lfri/p/10542797.html;
 
 根据account1中提供的模板进行用户名，密码，体温，地区的自定义；
 
