@@ -2,11 +2,12 @@
 import os
 import requests
 import time
+import datetime
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 
-time.sleep(1)
+time.sleep(60)
 
 driver = webdriver.Chrome()
 url = 'https://uis.zafu.edu.cn/cas/login?service=http%3A%2F%2Fappui.zafu.edu.cn%2Fsso%2Flogin.jsp%3FtargetUrl%3D%7Bbase64%7DaHR0cDovL2FwcHVpLnphZnUuZWR1LmNuL2g1YXBwL3ZhcHBwYy9pbmRleC5odG0%2FYXBwPVlxZGpJbmRleCZmcm9tPW1lc3NhZ2UmaXNhcHBpbnN0YWxsZWQ9MA%3D%3D'
@@ -18,7 +19,7 @@ province = ""
 city     = ""
 area     = ""
 
-def WORK():
+def work():
     # 获取用户信息
     def get_detail():
         global username
@@ -27,7 +28,7 @@ def WORK():
         global province
         global area
         global city
-        path = "/home/scheng/autoSign/detail/account1"
+        path = os.getcwd()+"/detail/account1.txt"
         with open(path, "r", encoding = "utf-8") as f:
             username = f.readline().splitlines()
             password = f.readline().splitlines()
@@ -69,8 +70,6 @@ def WORK():
             flag = 1
             i = 1
             while flag:
-                i = str(i)
-                print(i)
                 text = driver.find_element_by_xpath("//*[@id='app']/div/div[4]/div/div[2]/div["+str(j)+"]/ul/li["+str(i)+"]").text
                 driver.find_element_by_xpath("//*[@id='app']/div/div[4]/div/div[2]/div["+str(j)+"]/ul/li["+str(i)+"]").click()            
                 time.sleep(0.5)
@@ -105,9 +104,33 @@ def WORK():
         time.sleep(1)
         driver.find_element_by_xpath("//*[@id='app']/div/div[2]/div[2]/button").click() 
 
+
     get_detail()
     signin(username, password)
     PCA(province, city, area)
     others(decimal=''.join(decimal))
+    
+def WORK():
+    def time_dist():
+        cur_hour = datetime.datetime.now().hour
+        cur_min  = datetime.datetime.now().minute
+        cur_sec  =  datetime.datetime.now().second
+        total = int(cur_hour) * 60 * 60 + cur_min * 60 + cur_sec
+        dist = 86400 - total
+        return dist
+
+    def time_control():
+        work()
+        global driver
+        driver.close()
+        driver.quit()
+        while(1):
+            time.sleep(time_dist() + 10)
+            driver = webdriver.Chrome()
+            work()
+            driver.close()
+            driver.quit()
+    
+    time_control()
 
 WORK()
